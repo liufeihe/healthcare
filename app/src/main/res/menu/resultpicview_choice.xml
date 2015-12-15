@@ -1,0 +1,16 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ResultActivity">
+    <item
+        android:id="@+id/id_choice_resultListView"
+        android:title="@string/view_list"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/id_choice_addItem2"
+        android:title="@string/view_add_item"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+</menu>
