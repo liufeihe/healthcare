@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
+    android:background="@color/colorBackground"
     tools:context="com.example.feihe.healthcare.MainActivity">
 
     <android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
@@ -34,7 +35,7 @@
             android:scaleType="fitXY"
             android:background="@drawable/add_buttion_selector"
             android:clickable="true"
-            android:onClick="newButton"/>
+            android:onClick="addButton"/>
     </LinearLayout>
 
     <ListView

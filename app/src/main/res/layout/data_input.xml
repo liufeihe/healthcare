@@ -4,16 +4,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
-
-    <AutoCompleteTextView
-        android:id="@+id/id_item_name"
-        android:hint="@string/input_name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:completionThreshold="1"
-        android:singleLine="false" />
     <EditText
-        android:id="@+id/id_item_data"
+        android:id="@+id/id_data"
         android:hint="@string/input_data"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />

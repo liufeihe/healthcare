@@ -7,10 +7,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -20,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String NAME = "itemName";
     private MyDB myDB;
 
-    public static final String BMI = "BMI";
     public static final String BMIKGM2 = "BMI--kg/m2";
 
     private ArrayList<String> listName;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main);
         Toolbar toolbar = (Toolbar)findViewById(R.id.id_main_toolbar);
         toolbar.setTitle(R.string.app_name);
+        setSupportActionBar(toolbar);
 
         myDB = MyDB.getInstance(this);
         listName = getListName();
@@ -45,9 +48,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 ItemName = listName.get(position);
+                if(ItemName.equalsIgnoreCase(BMIKGM2)){
+                    Toast toast=Toast.makeText(MainActivity.this,R.string.data_auto_handle,Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.show();
+                    return true;
+                }
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage("不再记录‘" + ItemName + "’了吗？");
-                builder.setPositiveButton("删了吧", new DialogInterface.OnClickListener() {
+                LinearLayout nameModify = (LinearLayout)getLayoutInflater().inflate(R.layout.name_modify, null);
+                final EditText editText = (EditText)nameModify.findViewById(R.id.id_modify_name);
+                builder.setView(nameModify);
+                builder.setPositiveButton("删了吧，不再记录", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         myDB.deleteItemByName(ItemName);
@@ -55,7 +66,32 @@ public class MainActivity extends AppCompatActivity {
                         setMainView();
                     }
                 });
-                builder.setNegativeButton("留着吧", null);
+                builder.setNegativeButton("留着吧，改个名字", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newName = editText.getText().toString();
+                        if(newName.equalsIgnoreCase(BMIKGM2)){
+                            Toast toast=Toast.makeText(MainActivity.this,R.string.data_auto_handle,Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER,0,0);
+                            toast.show();
+                            return ;
+                        }
+                        if(newName.equalsIgnoreCase("")){
+                            Toast toast=Toast.makeText(MainActivity.this,R.string.name_empty,Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER,0,0);
+                            toast.show();
+                            return;
+                        }
+                        if(isNameExist(newName)){
+                            Toast toast=Toast.makeText(MainActivity.this,R.string.name_again,Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER,0,0);
+                            toast.show();
+                            return;
+                        }
+                        myDB.modifyName(ItemName,newName);
+                        setMainView();
+                    }
+                });
                 builder.create().show();
                 return true;
             }
@@ -73,10 +109,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //增加个记录名称
-    public void newButton(View view){
+    public void addButton(View view){
         EditText addName = (EditText)findViewById(R.id.id_main_addName);
         ItemName = addName.getText().toString();
-        if(ItemName.equalsIgnoreCase(BMI)||ItemName.equalsIgnoreCase(BMIKGM2)){
+        if(ItemName.equalsIgnoreCase(BMIKGM2)){
             Toast toast=Toast.makeText(MainActivity.this,R.string.data_auto_handle,Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER,0,0);
             toast.show();
@@ -88,15 +124,7 @@ public class MainActivity extends AppCompatActivity {
             toast.show();
             return;
         }
-        boolean isExist = false;
-        for(int i=0;i<listName.size();i++){
-            if(ItemName.equals(listName.get(i))){
-                isExist = true;
-                break;
-            }
-
-        }
-        if(isExist){
+        if(isNameExist(ItemName)){
             Toast toast=Toast.makeText(MainActivity.this,R.string.name_again,Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER,0,0);
             toast.show();
@@ -118,6 +146,12 @@ public class MainActivity extends AppCompatActivity {
         else
             return false;
     }
+    protected boolean isNameExist(String name){
+        for(int i=0;i<listName.size();i++)
+            if(name.equals(listName.get(i)))
+                return true;
+        return false;
+    }
     protected ArrayList<String> getListName(){
         listName = myDB.queryName();
         if(isShowBMI(listName))
@@ -135,5 +169,24 @@ public class MainActivity extends AppCompatActivity {
             listName.add(length-1-i,temp1);
         }
         return listName;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        menu.clear();
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.id_about:
+                Toast toast=Toast.makeText(MainActivity.this,R.string.about_message,Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER,0,0);
+                toast.show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

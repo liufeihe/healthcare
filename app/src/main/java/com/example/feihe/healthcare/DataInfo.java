@@ -11,10 +11,6 @@ public class DataInfo implements Serializable{
     private float data;
     private String time;
 
-    public DataInfo(String name){
-        this.name = name;
-    }
-
     public DataInfo(String name, float data, String time){
         this.name = name;
         this.data = data;

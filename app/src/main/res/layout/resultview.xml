@@ -11,7 +11,7 @@
     <android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
         android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar android:id="@+id/id_reusltview_list_toolbar"
+        <android.support.v7.widget.Toolbar android:id="@+id/id_reusltview_toolbar"
             android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary" app:popupTheme="@style/AppTheme.PopupOverlay" />
 
@@ -23,13 +23,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <ListView
-            android:id="@+id/id_resultView_list"
+        <fragment
+            android:id="@+id/id_frag_list"
+            android:name="com.example.feihe.healthcare.FragList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:choiceMode="singleChoice">
-        </ListView>
+            android:layout_height="match_parent"/>
+        <fragment
+            android:id="@+id/id_frag_pic"
+            android:name="com.example.feihe.healthcare.FragPic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

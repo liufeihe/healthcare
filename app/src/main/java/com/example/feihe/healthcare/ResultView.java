@@ -1,21 +1,15 @@
 package com.example.feihe.healthcare;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PathDashPathEffect;
 import android.graphics.PathEffect;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
-
-import java.util.ArrayList;
 
 /**
  * TODO: document your custom view class.
@@ -122,19 +116,21 @@ public class ResultView extends View {
         if(key.equalsIgnoreCase(MainActivity.BMIKGM2)){
             //画BMI的18.5-24-28
             canvas.drawText("18.5-24为正常，大于24过重，大于28肥胖", width*1.5f, height*1.5f,textPaint);
-            canvas.drawText("均值为："+Math.round(average * 10)/10, width*3f, height,textPaint);
+            canvas.drawText("均值为："+Math.round(average * 10)/10, width*3.5f, height,textPaint);
         }
         else{
-            canvas.drawText("均值为："+Math.round(average * 10)/10, width*2.5f, height*1.5f,textPaint);
+            canvas.drawText("均值为："+Math.round(average * 10)/10, width*3.5f, height*1.5f,textPaint);
         }
-        textPaint.setColor(Color.RED);
-        canvas.drawText(String.valueOf((float) Math.round(maxData * 10) / 10), 0, minY, textPaint);
-        textPaint.setColor(Color.GREEN);
-        canvas.drawText(String.valueOf((float) Math.round(minData * 10) / 10), 0, maxY, textPaint);
 
         float dataWidth = (maxX-minX)/length;
         float dataHeight = (maxY-minY)/(maxData-minData);
         if(maxData != minData){
+            //画最大值和最小值
+            textPaint.setColor(Color.RED);
+            canvas.drawText(String.valueOf((float) Math.round(maxData * 10) / 10), 0, minY, textPaint);
+            textPaint.setColor(Color.GREEN);
+            canvas.drawText(String.valueOf((float) Math.round(minData * 10) / 10), 0, maxY, textPaint);
+
             averageY = maxY - (average-minData)*dataHeight;
             //画最大值线
             Paint linePaint1 = new Paint();

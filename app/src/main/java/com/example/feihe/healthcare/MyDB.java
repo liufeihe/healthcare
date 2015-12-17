@@ -36,6 +36,14 @@ public class MyDB {
     public void deleteName(String name){
             db.delete("myName", "name=?", new String[]{name});
     }
+    public void modifyName(String oldName,String newName){
+        ContentValues value1 = new ContentValues();
+        value1.put("name",newName);
+        db.update("myName", value1,"name=?", new String[]{oldName});
+        ContentValues value2 = new ContentValues();
+        value2.put("name", newName);
+        db.update("myItem", value2, "name=?", new String[]{oldName});
+    }
     public ArrayList<String> queryName(){
         Cursor cursor = db.rawQuery("select * from myName", null);
         ArrayList<String> result=new ArrayList<>();

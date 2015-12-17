@@ -22,7 +22,6 @@
         <activity
             android:name=".ResultActivity"
             android:icon="@drawable/healthcare"
-            android:label="查看"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".MainActivity">
             <meta-data

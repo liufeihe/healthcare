@@ -1,0 +1,18 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ResultActivity">
+    <item android:id="@+id/choice_add"
+        android:title="+"
+        android:orderInCategory="10"
+        app:showAsAction="ifRoom" />
+    <item android:id="@+id/choice_clear"
+        android:title="x"
+        android:orderInCategory="20"
+        app:showAsAction="ifRoom" />
+    <item android:id="@+id/choice_change"
+        android:title="->"
+        android:orderInCategory="30"
+        app:showAsAction="ifRoom" />
+</menu>
