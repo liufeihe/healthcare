@@ -4,19 +4,32 @@ import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.os.Environment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class ResultActivity extends AppCompatActivity {
@@ -40,6 +53,15 @@ public class ResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.resultview);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                takePic();
+                Toast.makeText(ResultActivity.this, "截图成功,，存于SD卡的healthcare目录", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         toolbar = (Toolbar)findViewById(R.id.id_reusltview_toolbar);
 
         myDB = MyDB.getInstance(this);
@@ -52,6 +74,56 @@ public class ResultActivity extends AppCompatActivity {
         key=intent.getStringExtra(MainActivity.NAME);
 
         setResultPicView();
+    }
+
+    private void takePic(){
+        if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Toast.makeText(ResultActivity.this, "没有SD卡", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //获取windows中位于最顶层的view
+        View view = getWindow().getDecorView();
+        view.buildDrawingCache();
+        //获取状态栏的高度
+        Rect rect = new Rect();
+        view.getWindowVisibleDisplayFrame(rect);
+        int statusBarHeights = rect.top;
+        //获取屏幕的宽和高
+        Display display = getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        display.getSize(point);
+        int widths = point.x;
+        int heights = point.y;
+        //允许当前窗口保存缓存信息
+        view.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache(),
+                0, statusBarHeights, widths, heights-statusBarHeights);
+        view.destroyDrawingCache();
+
+        //把bmp写入SD卡
+        String dirName = Environment.getExternalStorageDirectory().getPath()
+                +"/healthcare"+"/";
+        Calendar c = Calendar.getInstance();
+        String fileName = key+c.get(Calendar.YEAR)+""+c.get(Calendar.MONTH)+""
+                +c.get(Calendar.DAY_OF_MONTH)+""+c.get(Calendar.HOUR_OF_DAY)+""
+                +c.get(Calendar.MINUTE)+""+ c.get(Calendar.MILLISECOND)+""
+                +".jpeg";
+        try{
+            File dir = new File(dirName);
+            if(!dir.exists())
+                dir.mkdir();
+            File file =  new File(dirName+fileName);
+            if(!file.exists()){
+                file.createNewFile();
+            }
+            FileOutputStream fos = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
+            fos.flush();
+            fos.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     public void setResultPicView(){
