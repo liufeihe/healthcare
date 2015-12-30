@@ -116,10 +116,10 @@ public class ResultView extends View {
         if(key.equalsIgnoreCase(MainActivity.BMIKGM2)){
             //画BMI的18.5-24-28
             canvas.drawText("18.5-24为正常，大于24过重，大于28肥胖", width*1.5f, height*1.5f,textPaint);
-            canvas.drawText("均值为："+Math.round(average * 10)/10, width*3.5f, height,textPaint);
+            canvas.drawText("均值为："+(float)Math.round(average * 10)/10, width*3.5f, height,textPaint);
         }
         else{
-            canvas.drawText("均值为："+Math.round(average * 10)/10, width*3.5f, height*1.5f,textPaint);
+            canvas.drawText("均值为："+(float)Math.round(average * 10)/10, width*3.5f, height*1.5f,textPaint);
         }
 
         float dataWidth = (maxX-minX)/length;
